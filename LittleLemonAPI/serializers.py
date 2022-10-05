@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from .models import MenuItem
+from .models import MenuItem 
 
 # class MenuItemSerializer(serializers.Serializer):
 #     id = serializers.IntegerField()
