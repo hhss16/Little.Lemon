@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'LittleLemon.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lemon',
+        'NAME': 'little_lemon',
         'USER':'root',
         'PASSWORD':'root',
         'HOST':'127.0.0.1'
