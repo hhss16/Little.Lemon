@@ -13,7 +13,7 @@ from rest_framework import status
 def menu_items(request): 
     #return Response('list of books', status=status.HTTP_200_OK) 
     if(request.method=='GET'):
-        items = MenuItem.objects.all()
+        items = MenuItem.objects.select_related('category').all()
         serialized_item = MenuItemSerializer(items, many=True)
         return Response(serialized_item.data)
     elif request.method=='POST':
@@ -21,7 +21,7 @@ def menu_items(request):
         serialized_item.is_valid(raise_exception=True)
         serialized_item.save()
         return Response(serialized_item.validated_data,status.HTTP_201_CREATED)
-
+    
 @api_view() 
 def single_item(request, id):
     # item = MenuItem.objects.get(pk=id)
