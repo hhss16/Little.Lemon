@@ -12,7 +12,11 @@ from rest_framework import status
 def menu_items(request): 
     #return Response('list of books', status=status.HTTP_200_OK) 
     if(request.method=='GET'):
-        items = MenuItem.objects.select_related('category').all()
+        category_name = request.query_params.get('category')
+        if category_name:
+            items = MenuItem.objects.select_related('category').filter(category__title=category_name)
+        else:
+            items = MenuItem.objects.select_related('category').all()
         serialized_item = MenuItemSerializer(items, many=True)
         return Response(serialized_item.data)
     elif request.method=='POST':
