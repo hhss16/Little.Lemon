@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, renderer_classes
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
+from decimal import Decimal
   
 
 # Create your views here. 
@@ -12,11 +13,13 @@ from rest_framework import status
 def menu_items(request): 
     #return Response('list of books', status=status.HTTP_200_OK) 
     if(request.method=='GET'):
+        items = MenuItem.objects.select_related('category')
         category_name = request.query_params.get('category')
+        to_price = request.query_params.get('to_price')
         if category_name:
-            items = MenuItem.objects.select_related('category').filter(category__title=category_name)
-        else:
-            items = MenuItem.objects.select_related('category').all()
+            items = items.filter(category__title=category_name)
+        if to_price:
+            items = items.filter(price__lte=to_price)
         serialized_item = MenuItemSerializer(items, many=True)
         return Response(serialized_item.data)
     elif request.method=='POST':
