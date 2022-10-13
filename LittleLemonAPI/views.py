@@ -46,3 +46,10 @@ def single_item(request, id):
 # @authentication_classes([TokenAuthentication])
 def secret(request):
     return Response({"message":"Some secret message"})
+
+@api_view()
+@permission_classes([IsAuthenticated])
+# @authentication_classes([TokenAuthentication])
+def roles(request):
+    isdelivery = request.user.groups.filter(name='Delivery').exists()
+    return Response(isdelivery)
