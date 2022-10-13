@@ -53,3 +53,11 @@ def secret(request):
 def roles(request):
     isdelivery = request.user.groups.filter(name='Delivery').exists()
     return Response(isdelivery)
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def manager_view(request):
+    if request.user.groups.filter(name='Manager').exists():
+        return Response({"message":"Only Manager Should See This"})
+    else:
+        return Response({"message":"You are not authorized"}, 403)
