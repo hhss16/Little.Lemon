@@ -1,10 +1,13 @@
 from django.shortcuts import  get_object_or_404
 from rest_framework.response import Response 
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, permission_classes
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
-from decimal import Decimal
+from rest_framework.permissions import IsAuthenticated
+
+# from rest_framework.decorators import authentication_classes
+# from rest_framework.authentication import TokenAuthentication
   
 
 # Create your views here. 
@@ -37,3 +40,9 @@ def single_item(request, id):
     item = get_object_or_404(MenuItem,pk=id)
     serialized_item = MenuItemSerializer(item)
     return Response(serialized_item.data)
+
+@api_view()
+@permission_classes([IsAuthenticated])
+# @authentication_classes([TokenAuthentication])
+def secret(request):
+    return Response({"message":"Some secret message"})
