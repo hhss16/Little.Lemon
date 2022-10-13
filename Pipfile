@@ -8,6 +8,8 @@ django = "*"
 mysqlclient = "*"
 djangorestframework = "*"
 djangorestframework-xml = "*"
+django-filter = "*"
+djoser = "*"
 
 [dev-packages]
 autopep8 = "*"
