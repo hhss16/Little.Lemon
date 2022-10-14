@@ -43,7 +43,6 @@ def single_item(request, id):
 
 @api_view()
 @permission_classes([IsAuthenticated])
-# @authentication_classes([TokenAuthentication])
 def secret(request):
     return Response({"message":"Some secret message"})
 
