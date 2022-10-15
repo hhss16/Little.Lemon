@@ -19,7 +19,7 @@ def menu_items(request):
         to_price = request.query_params.get('to_price')
         search = request.query_params.get('search')
         ordering = request.query_params.get('ordering')
-        perpage = request.query_params.get('perpage',default=10)
+        perpage = request.query_params.get('perpage',default=2)
         page = request.query_params.get('page', default=1)
 
 
