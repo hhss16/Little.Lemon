@@ -1,6 +1,10 @@
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 
+class TenCallsPerMinute(UserRateThrottle):
+    scope = 'ten'
+
+
 class GetAnononymousRateThrottle(AnonRateThrottle):
     scope = 'get_anon'
 
@@ -9,7 +13,8 @@ class GetAnononymousRateThrottle(AnonRateThrottle):
             return True
         return super().allow_request(request, view)
 
+
 class FivePerMinuteThrottle(AnonRateThrottle):
     # scope = 'get_five'
     def parse_rate(self, rate):
-        return (5,60)
+        return (5, 60)
