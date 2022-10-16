@@ -9,5 +9,6 @@ urlpatterns = [
     path('secret/', views.secret),
     path('manager-view/', views.manager_view),
     path('roles/', views.roles),
-    path('api-token-auth/', obtain_auth_token)
+    path('api-token-auth/', obtain_auth_token),
+    path('me/', views.me),
 ] 
