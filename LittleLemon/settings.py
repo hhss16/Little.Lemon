@@ -138,12 +138,16 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
     ],
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon':'2/minute',
+    #     'user':'5/minute',
+    #     'ten':'10/minute'
+    # }
 }
 
 DJOSER = {
