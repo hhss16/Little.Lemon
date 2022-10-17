@@ -17,11 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 from rest_framework_simplejwt.views import TokenBlacklistView
 
 urlpatterns = [
