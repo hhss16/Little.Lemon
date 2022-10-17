@@ -5,17 +5,17 @@ from rest_framework.decorators import api_view, permission_classes, throttle_cla
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.throttling import AnonRateThrottle
 from .throttles import TenCallsPerMinute
 
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
+# from django.contrib.auth.models import User
 
 
 @api_view(['GET', 'POST'])
 def menu_items(request):
-    if (request.method == 'GET'):
+    if request.method == 'GET':
         items = MenuItem.objects.select_related('category').all()
         category_name = request.query_params.get('category')
         to_price = request.query_params.get('to_price')
@@ -65,23 +65,25 @@ def manager_view(request):
     else:
         return Response({"message": "You are not authorized"}, 403)
 
+
 @api_view()
 @throttle_classes([AnonRateThrottle])
 def throttle_check(request):
-    return Response({"message":"successful"})
+    return Response({"message": "successful"})
 
 
 @api_view()
 @permission_classes([IsAuthenticated])
 @throttle_classes([TenCallsPerMinute])
 def throttle_check_auth(request):
-    return Response({"message":"message for the logged in users only"})
+    return Response({"message": "message for the logged in users only"})
 
 
 @api_view()
 @permission_classes([IsAuthenticated])
 def me(request):
     return Response(request.user.email)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -90,9 +92,28 @@ def test(request):
         # user = request.user
         user = get_object_or_404(User, username=request.data['username'])
         if user:
-            managers = Group.objects.get(name='Manager') 
+            managers = Group.objects.get(name='Manager')
             managers.user_set.add(user)
             # managers.user_set.remove(user)
-            return Response({"message":"ok", "email":user.email})
+            return Response({"message": "ok", "email": user.email})
     else:
-        return Response({"message":"error"})
+        return Response({"message": "error"})
+
+
+@api_view(['POST', 'DELETE'])
+@permission_classes([IsAdminUser])
+def add_to_group(request):
+    username = request.data['username']
+    group = request.data['group']
+
+    if username and group:
+        user = get_object_or_404(User, username=request.data['username'])
+        managers = Group.objects.get(name=group)
+        if request.method == 'POST':
+            managers.user_set.add(user)
+            return Response({"message": "user added to the group"}, 200)
+        elif request.method == 'DELETE':
+            managers.user_set.remove(user)
+            return Response({"message": "user removed from the group"}, 200)
+
+    return Response({"message": "error"}, 400)
