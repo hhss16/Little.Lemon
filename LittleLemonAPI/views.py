@@ -12,6 +12,7 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.throttling import UserRateThrottle
 from .throttles import TenCallsPerMinute
 
+
 # Create your views here. 
 
 @api_view(['GET','POST']) 
@@ -80,6 +81,7 @@ def manager_view(request):
         return Response({"message":"Only Manager Should See This"})
     else:
         return Response({"message":"You are not authorized"}, 403)
+
 
 @api_view()
 @throttle_classes([AnonRateThrottle])

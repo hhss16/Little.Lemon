@@ -140,11 +140,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon':'2/minute',
-        'user':'5/minute',
-        'ten':'10/minute'
-    }
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon':'2/minute',
+    #     'user':'5/minute',
+    #     'ten':'10/minute'
+    # }
 }
 
 DJOSER = {
