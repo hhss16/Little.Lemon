@@ -7,7 +7,6 @@ from .serializers import MenuItemSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
-from rest_framework.throttling import UserRateThrottle
 from .throttles import TenCallsPerMinute
 
 
