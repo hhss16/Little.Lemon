@@ -5,10 +5,8 @@ from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-
-# from rest_framework.decorators import authentication_classes
-# from rest_framework.authentication import TokenAuthentication
-  
+from decimal import Decimal
+from django.core.paginator import Paginator, EmptyPage
 
 # Create your views here. 
 
@@ -21,6 +19,8 @@ def menu_items(request):
         to_price = request.query_params.get('to_price')
         search = request.query_params.get('search')
         ordering = request.query_params.get('ordering')
+        perpage = request.query_params.get('perpage',default=2)
+        page = request.query_params.get('page', default=1)
 
 
         if category_name:
@@ -31,8 +31,16 @@ def menu_items(request):
             items = items.filter(title__contains=search)
 
         if ordering:
-            for ordering_field in ordering.split(","):
+            ordering_fields = ordering.split(",")
+            for ordering_field in ordering_fields:
                 items = items.order_by(ordering_field)
+
+
+        paginator = Paginator(items,per_page=perpage)
+        try:
+            items = paginator.page(number=page)
+        except EmptyPage:
+            items = []
 
         serialized_item = MenuItemSerializer(items, many=True)
         return Response(serialized_item.data)
