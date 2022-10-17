@@ -1,10 +1,14 @@
 from django.shortcuts import  get_object_or_404
 from rest_framework.response import Response 
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from .throttles import GetAnononymousRateThrottle, FivePerMinuteThrottle
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import UserRateThrottle
+from .throttles import TenCallsPerMinute
 
 # from rest_framework.decorators import authentication_classes
 # from rest_framework.authentication import TokenAuthentication
@@ -60,3 +64,16 @@ def manager_view(request):
         return Response({"message":"Only Manager Should See This"})
     else:
         return Response({"message":"You are not authorized"}, 403)
+
+
+@api_view()
+@throttle_classes([AnonRateThrottle])
+def throttle_check(request):
+    return Response({"message":"successful"})
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+@throttle_classes([TenCallsPerMinute])
+def throttle_check_auth(request):
+    return Response({"message":"message for the logged in users only"})
