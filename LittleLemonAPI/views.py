@@ -10,18 +10,10 @@ from .throttles import GetAnononymousRateThrottle, FivePerMinuteThrottle
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.throttling import UserRateThrottle
 from .throttles import TenCallsPerMinute
-from rest_framework_simplejwt.tokens import OutstandingToken, BlacklistedToken, RefreshToken
 
-
-# from rest_framework.decorators import authentication_classes
-# from rest_framework.authentication import TokenAuthentication
-
-
-# Create your views here.
 
 @api_view(['GET', 'POST'])
 def menu_items(request):
-    # return Response('list of books', status=status.HTTP_200_OK)
     if (request.method == 'GET'):
         items = MenuItem.objects.select_related('category').all()
         category_name = request.query_params.get('category')
