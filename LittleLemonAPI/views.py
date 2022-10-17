@@ -9,6 +9,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle
 from .throttles import TenCallsPerMinute
 
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
+
 
 @api_view(['GET', 'POST'])
 def menu_items(request):
@@ -79,3 +82,17 @@ def throttle_check_auth(request):
 @permission_classes([IsAuthenticated])
 def me(request):
     return Response(request.user.email)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def test(request):
+    if request.user.groups.filter(name='SuperAdmin').exists():
+        # user = request.user
+        user = get_object_or_404(User, username=request.data['username'])
+        if user:
+            managers = Group.objects.get(name='Manager') 
+            managers.user_set.add(user)
+            # managers.user_set.remove(user)
+            return Response({"message":"ok", "email":user.email})
+    else:
+        return Response({"message":"error"})
