@@ -6,7 +6,6 @@ from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .throttles import GetAnononymousRateThrottle, FivePerMinuteThrottle
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.throttling import UserRateThrottle
 from .throttles import TenCallsPerMinute
