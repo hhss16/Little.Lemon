@@ -7,8 +7,8 @@ from rest_framework import status
 from decimal import Decimal
 from django.core.paginator import Paginator, EmptyPage
 
-
-# Create your views here. 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 @api_view(['GET','POST']) 
 def menu_items(request): 
@@ -56,3 +56,8 @@ def single_item(request, id):
     item = get_object_or_404(MenuItem,pk=id)
     serialized_item = MenuItemSerializer(item)
     return Response(serialized_item.data)
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def secret(request):
+    return Response({"message":"Some secret message"})
