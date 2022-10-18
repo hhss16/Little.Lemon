@@ -13,6 +13,5 @@ urlpatterns = [
     path('throttle-check/', views.throttle_check),
     path('throttle-check-auth/', views.throttle_check_auth),
     path('me/', views.me),
-    path('test', views.test),
     path('groups/manager/users', views.managers)
 ] 
