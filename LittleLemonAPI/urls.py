@@ -14,5 +14,5 @@ urlpatterns = [
     path('throttle-check-auth/', views.throttle_check_auth),
     path('me/', views.me),
     path('test', views.test),
-    path('add_to_group/', views.add_to_group)
+    path('groups/manager/users', views.managers)
 ] 

@@ -102,18 +102,17 @@ def test(request):
 
 @api_view(['POST', 'DELETE'])
 @permission_classes([IsAdminUser])
-def add_to_group(request):
+def managers(request):
     username = request.data['username']
-    group = request.data['group']
 
-    if username and group:
+    if username:
         user = get_object_or_404(User, username=request.data['username'])
-        managers = Group.objects.get(name=group)
+        managers = Group.objects.get(name="Manager")
         if request.method == 'POST':
             managers.user_set.add(user)
-            return Response({"message": "user added to the group"}, 200)
+            return Response({"message": "user added to the manager group"}, 200)
         elif request.method == 'DELETE':
             managers.user_set.remove(user)
-            return Response({"message": "user removed from the group"}, 200)
+            return Response({"message": "user removed from the manager group"}, 200)
 
     return Response({"message": "error"}, 400)
