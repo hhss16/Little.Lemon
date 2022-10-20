@@ -7,16 +7,12 @@ from rest_framework import status
 from decimal import Decimal
 from django.core.paginator import Paginator, EmptyPage
 from rest_framework.permissions import IsAuthenticated
-from .throttles import GetAnononymousRateThrottle, FivePerMinuteThrottle
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.throttling import UserRateThrottle
 from .throttles import TenCallsPerMinute
 
-# Create your views here. 
-
 @api_view(['GET','POST']) 
 def menu_items(request): 
-    #return Response('list of books', status=status.HTTP_200_OK) 
     if(request.method=='GET'):
         items = MenuItem.objects.select_related('category').all()
         category_name = request.query_params.get('category')
@@ -82,11 +78,11 @@ def manager_view(request):
     else:
         return Response({"message":"You are not authorized"}, 403)
 
+
 @api_view()
 @throttle_classes([AnonRateThrottle])
 def throttle_check(request):
-    return Response({"message":"successful"})
-
+    return Response({"message":"successful"}) 
 
 @api_view()
 @permission_classes([IsAuthenticated])
