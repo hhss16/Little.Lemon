@@ -23,7 +23,6 @@ def menu_items(request):
             items = items.filter(price=to_price)
         if search:
             items = items.filter(title__contains=search)
-        
         serialized_item = MenuItemSerializer(items, many=True)
         return Response(serialized_item.data)
     elif request.method=='POST':
