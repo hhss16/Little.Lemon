@@ -12,12 +12,11 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.throttling import UserRateThrottle
 from .throttles import TenCallsPerMinute
 
-
-# Create your views here.
+from rest_framework.permissions import IsAdminUser 
+from django.contrib.auth.models import User, Group 
 
 @api_view(['GET', 'POST'])
 def menu_items(request):
-    # return Response('list of books', status=status.HTTP_200_OK)
     if (request.method == 'GET'):
         items = MenuItem.objects.select_related('category').all()
         category_name = request.query_params.get('category')
@@ -104,3 +103,15 @@ def throttle_check_auth(request):
 def me(request):
     return Response(request.user.email)
 
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def managers(request):
+    username = request.data['username']
+    if username:
+        user = get_object_or_404(User, username=username)
+        managers = Group.objects.get(name="Manager")
+        managers.user_set.add(user)
+        return Response({"message": "ok"})
+
+    return Response({"message": "error"}, status.HTTP_400_BAD_REQUEST)
