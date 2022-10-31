@@ -7,13 +7,13 @@ from rest_framework import status
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import StaticHTMLRenderer
 # from rest_framework_csv.renderers import CSVRenderer
+from rest_framework_yaml.renderers import YAMLRenderer
   
 
 # Create your views here. 
 
 @api_view(['GET','POST']) 
 def menu_items(request): 
-    #return Response('list of books', status=status.HTTP_200_OK) 
     if(request.method=='GET'):
         items = MenuItem.objects.select_related('category').all()
         serialized_item = MenuItemSerializer(items, many=True)
