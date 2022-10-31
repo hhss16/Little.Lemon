@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, renderer_classes
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 from rest_framework import status
+from rest_framework.renderers import TemplateHTMLRenderer
   
 
 # Create your views here. 
@@ -27,3 +28,10 @@ def single_item(request, id):
     item = get_object_or_404(MenuItem,pk=id)
     serialized_item = MenuItemSerializer(item)
     return Response(serialized_item.data)
+
+@api_view() 
+@renderer_classes ([TemplateHTMLRenderer])
+def menu(request):
+    items = MenuItem.objects.select_related('category').all()
+    serialized_item = MenuItemSerializer(items, many=True)
+    return Response({'data':serialized_item.data}, template_name='menu-items.html')
