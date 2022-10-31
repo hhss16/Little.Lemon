@@ -8,11 +8,8 @@ from decimal import Decimal
 from django.core.paginator import Paginator, EmptyPage
 
 
-# Create your views here. 
-
 @api_view(['GET','POST']) 
 def menu_items(request): 
-    #return Response('list of books', status=status.HTTP_200_OK) 
     if(request.method=='GET'):
         items = MenuItem.objects.select_related('category').all()
         category_name = request.query_params.get('category')
@@ -21,20 +18,15 @@ def menu_items(request):
         ordering = request.query_params.get('ordering')
         perpage = request.query_params.get('perpage',default=2)
         page = request.query_params.get('page', default=1)
-
-
         if category_name:
             items = items.filter(category__title=category_name)
         if to_price:
             items = items.filter(price=to_price)
         if search:
             items = items.filter(title__contains=search)
-
         if ordering:
             ordering_fields = ordering.split(",")
-            for ordering_field in ordering_fields:
-                items = items.order_by(ordering_field)
-
+            items = items.order_by(*ordering_fields)
 
         paginator = Paginator(items,per_page=perpage)
         try:
