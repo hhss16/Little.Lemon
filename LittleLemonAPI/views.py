@@ -8,8 +8,8 @@ from decimal import Decimal
 from django.core.paginator import Paginator, EmptyPage
 
 from rest_framework import viewsets
-# from rest_framework import filters
-from django_filters import rest_framework as filters
+from rest_framework import filters
+# from django_filters import rest_framework as filters
 from rest_framework import pagination
 
 @api_view(['GET','POST']) 
@@ -53,13 +53,13 @@ def single_item(request, id):
     serialized_item = MenuItemSerializer(item)
     return Response(serialized_item.data)
 
-class MenuItemFilter(filters.FilterSet):
-    min_price = filters.NumberFilter(field_name="price", lookup_expr='gte')
-    max_price = filters.NumberFilter(field_name="price", lookup_expr='lte')
-    title = filters.CharFilter(field_name='title',lookup_expr='contains')
-    class Meta:
-        model = MenuItem
-        fields = ['price', 'inventory', 'title']
+# class MenuItemFilter(filters.FilterSet):
+#     min_price = filters.NumberFilter(field_name="price", lookup_expr='gte')
+#     max_price = filters.NumberFilter(field_name="price", lookup_expr='lte')
+#     title = filters.CharFilter(field_name='title',lookup_expr='contains')
+#     class Meta:
+#         model = MenuItem
+#         fields = ['price', 'inventory', 'title']
 
 class CustomPagination(pagination.PageNumberPagination):
     def get_paginated_response(self, data):
@@ -76,8 +76,9 @@ class CustomPagination(pagination.PageNumberPagination):
 class MenuItemsViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
-    search_fields = ['inventory','price', 'title']
-    ordering_fields = ['price', 'inventory']
+    ordering_fields=['price','inventory']
+    search_fields=['title','category__title']
+
     # filterset_fields = ['price', 'inventory']
     # filterset_class = MenuItemFilter
     # pagination_class = CustomPagination
