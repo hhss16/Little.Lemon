@@ -12,6 +12,8 @@ from rest_framework import filters
 # from django_filters import rest_framework as filters
 from rest_framework import pagination
 
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+
 @api_view(['GET','POST']) 
 def menu_items(request): 
     if(request.method=='GET'):
@@ -74,10 +76,18 @@ class CustomPagination(pagination.PageNumberPagination):
         })
 
 class MenuItemsViewSet(viewsets.ModelViewSet):
+    # throttle_classes = [AnonRateThrottle, UserRateThrottle]
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
-    ordering_fields=['price','inventory']
-    search_fields=['title','category__title']
+    # ordering_fields=['price','inventory']
+    # search_fields=['title','category__title']
+
+    def get_throttles(self):
+        if self.action == 'list':
+            throttle_classes = [AnonRateThrottle]
+        else:
+            throttle_classes = []  
+        return [throttle() for throttle in throttle_classes]
 
     # filterset_fields = ['price', 'inventory']
     # filterset_class = MenuItemFilter
