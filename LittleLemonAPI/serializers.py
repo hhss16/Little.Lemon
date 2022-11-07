@@ -5,7 +5,7 @@ from .models import MenuItem
 from .models import Category
 import bleach
 
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
 class CategorySerializer (serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,10 @@ class MenuItemSerializer(serializers.ModelSerializer):
         method_name='calculate_tax')
     category_id = serializers.IntegerField(write_only=True)
     category = CategorySerializer(read_only=True)
+    title = serializers.CharField(
+        max_length=255,
+        validators=[UniqueValidator(queryset=MenuItem.objects.all())]
+    )
 
     def validate(self, attrs):
         attrs['title'] = bleach.clean(attrs['title'])
@@ -35,14 +39,20 @@ class MenuItemSerializer(serializers.ModelSerializer):
                   'price_after_tax', 'category', 'category_id']
         extra_kwargs = {
             'price': {'min_value': 2, 'max_value': 20},
-            'title': {
-                'validators': [
-                    UniqueValidator(
-                        queryset=MenuItem.objects.all()
-                    )
-                ]
-            }
+            # 'title': {
+            #     'validators': [
+            #         UniqueValidator(
+            #             queryset=MenuItem.objects.all()
+            #         )
+            #     ]
+            # }
         }
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=MenuItem.objects.all(),
+        #         fields=['title', 'price']
+        #     ),
+        # ]
 
     def calculate_tax(self, product: MenuItem):
         return product.price * Decimal(1.1)
